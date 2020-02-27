@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from "react";
+
+import _ from "lodash";
+
 import axios from "axios";
 
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
+
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650
+  }
+});
+
 export default function ResultsBlock(props) {
+  const classes = useStyles();
+
   const [skuData, setSkuData] = useState("");
   const [skuFound, setSkuFound] = useState(false);
 
@@ -24,17 +44,32 @@ export default function ResultsBlock(props) {
 
   return (
     <div>
-      <ul>
-        {skuFound
-          ? Object.keys(skuData).map((data, index) => {
+      <TableContainer component={Paper}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell component="th" scope="row">
+                Item
+              </TableCell>
+              <TableCell component="th" scope="row">
+                Data
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {Object.keys(skuData).map((data, index) => {
               return (
-                <li key={index}>
-                  {data}:{skuData[data] ? skuData[data].toString() : ""}
-                </li>
+                <TableRow key={index}>
+                  <TableCell>{_.startCase(data)}</TableCell>
+                  <TableCell>
+                    {skuData[data] ? skuData[data].toString() : ""}
+                  </TableCell>
+                </TableRow>
               );
-            })
-          : "sku not found"}
-      </ul>
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

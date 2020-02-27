@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ResultsBlock from "./Components/ResultsBlock";
+import { Container, Button, TextField, Grid } from "@material-ui/core";
 
 import "./App.css";
 
@@ -26,24 +27,42 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div>
-          <form onSubmit={this.updateSkus}>
-            <input
-              type="text"
-              name=""
-              id="SkuInput"
-              onChange={this.onInputChange}
-            />
-            <button>Search</button>
-          </form>
-        </div>
-        <div>
+        <Container
+          maxWidth="md"
+          style={{ textAlign: "center", paddingTop: "1rem" }}
+        >
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={12}>
+              <TextField
+                type="text"
+                label="SKU(s)"
+                id="SkuInput"
+                onChange={this.onInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} style={{ paddingTop: "1rem" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.updateSkus}
+              >
+                Search
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
+        <Container maxWidth="md">
           {this.state.searchedSkus.length
             ? this.state.searchedSkus.map(sku => {
                 return <ResultsBlock key={sku} sku={sku} />;
               })
             : ""}
-        </div>
+        </Container>
       </div>
     );
   }
