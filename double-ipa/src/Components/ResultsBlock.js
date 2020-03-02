@@ -12,6 +12,15 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import LaunchIcon from "@material-ui/icons/Launch";
+
+import {
+  FormatRelatedCatPairs,
+  FormatUrl,
+  FormatImageTiles,
+  FormatPrice,
+  FormatParentSkus
+} from "./ResultsCells/ParsingFunctions";
 
 const useStyles = makeStyles({
   table: {
@@ -43,7 +52,13 @@ export default function ResultsBlock(props) {
   // mapSkus = () => {};
 
   return (
-    <div>
+    <div style={{ marginTop: "3rem" }}>
+      <h1>
+        {skuData.title}{" "}
+        <a href={skuData.url} target="_blank">
+          <LaunchIcon />
+        </a>
+      </h1>
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
@@ -58,12 +73,51 @@ export default function ResultsBlock(props) {
           </TableHead>
           <TableBody>
             {Object.keys(skuData).map((data, index) => {
+              let content = "";
+
+              if (skuData[data]) {
+                switch (data) {
+                  case "url":
+                  case "brandfolder360":
+                    content = <FormatUrl url={skuData[data]} />;
+                    break;
+
+                  case "relatedCategoryPairs":
+                    content = <FormatRelatedCatPairs pairs={skuData[data]} />;
+                    break;
+
+                  case "images":
+                    content = <FormatImageTiles imageArray={skuData[data]} />;
+                    break;
+
+                  case "price":
+                    content = <FormatPrice price={skuData[data]} />;
+                    break;
+
+                  case "height":
+                  case "width":
+                  case "depth":
+                    content = skuData[data] + " in";
+                    break;
+
+                  case "parentSkus":
+                    content = <FormatParentSkus skuString={skuData[data]} />;
+                    break;
+
+                  case "weight":
+                    content = skuData[data] + " lbs";
+                    break;
+
+                  default:
+                    content = skuData[data].toString();
+                }
+              }
+
+              // Format the return
               return (
-                <TableRow key={index}>
+                <TableRow hover={true} key={index}>
                   <TableCell>{_.startCase(data)}</TableCell>
-                  <TableCell>
-                    {skuData[data] ? skuData[data].toString() : ""}
-                  </TableCell>
+                  <TableCell> {content}</TableCell>
                 </TableRow>
               );
             })}
